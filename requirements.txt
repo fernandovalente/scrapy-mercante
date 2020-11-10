@@ -1,2 +1,3 @@
 ipdb
-Scrapy==2.4.0
+# Scrapy
+selenium
