@@ -1,9 +1,13 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
-# import ipdb; ipdb.set_trace()
+# Copy geckodriver to /var/bin
 
-driver = webdriver.Chrome()
-driver.get("https://www.mercante.transportes.gov.br/g36127/html/Escala/EscalaConsul.html")
+# driver = webdriver.Firefox(executable_path='/')
+driver = webdriver.Firefox()
+driver.get("http://www.mercante.transportes.gov.br/g36127/servlet/serpro.siscomex.mercante.servlet.MercanteController")
 
-elem = driver.find_element_by_name("NumEscala")
+elem = driver.find_element_by_class_name("a2")
+
+
+# driver.close()
