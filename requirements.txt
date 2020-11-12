@@ -1,3 +1,7 @@
 ipdb
 # Scrapy
 selenium
+
+# API
+fastapi
+uvicorn
