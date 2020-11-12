@@ -11,3 +11,4 @@
 *.pyc
 
 geckodriver.log
+local.env
