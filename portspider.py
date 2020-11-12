@@ -8,9 +8,7 @@ import time
 # Copy geckodriver to /var/bin
 
 # driver = webdriver.Firefox(executable_path='/')
-driver = webdriver.Chrome(
-    "/home/jaxe/Documents/repositorios/portmarket/scrapy-mercante/chromedriver_linux64/chromedriver"
-)
+driver = webdriver.Firefox()
 driver.get("http://www.mercante.transportes.gov.br/g36127/")
 time.sleep(3)
 elem = driver.find_element_by_link_text("aqui")
