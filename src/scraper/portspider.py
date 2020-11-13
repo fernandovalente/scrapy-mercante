@@ -1,6 +1,9 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.select import Select
+from selenium.webdriver.firefox.options import Options
+
+from bs4 import BeautifulSoup
 
 # from selenium.webdriver.support.ui import WebDriverWait
 import time
@@ -9,7 +12,13 @@ portcall_sample_value = "20000350812"
 
 
 def driver_setup():
-    driver = webdriver.Firefox()
+    options = Options()
+    options.headless = True
+    options.binary = "/app/scraper/geckodriver"
+
+    driver = webdriver.Firefox(
+        executable_path="/app/scraper/geckodriver", options=options
+    )
     driver.set_page_load_timeout(6)  # When to try again and reload.
     return driver
 
@@ -59,5 +68,9 @@ select_consult_option(driver)
 driver.switch_to.default_content()
 
 do_portcall_search(driver)
+
+soup = BeautifulSoup(driver.page_source)
+
+print(soup)
 
 end_driver(driver)

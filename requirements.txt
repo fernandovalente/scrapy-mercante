@@ -1,6 +1,9 @@
 ipdb
+
 # Scrapy
 selenium
+beautifulsoup4
+webdrivermanager
 
 # API
 fastapi

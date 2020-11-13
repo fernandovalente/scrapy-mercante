@@ -5,6 +5,8 @@
 .vscode/
 .DS_Store
 
+venv/
+
 .git/
 .Python
 **/__pycache__/*
