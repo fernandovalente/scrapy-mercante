@@ -13,13 +13,8 @@ portcall_sample_value = "20000350812"
 
 def driver_setup():
     options = Options()
-    options.headless = True
-    options.binary = "/app/scraper/geckodriver"
-
-    driver = webdriver.Firefox(
-        executable_path="/app/scraper/geckodriver", options=options
-    )
-    driver.set_page_load_timeout(6)  # When to try again and reload.
+    driver = webdriver.PhantomJS()
+    driver.set_page_load_timeout(20)  # When to try again and reload.
     return driver
 
 
