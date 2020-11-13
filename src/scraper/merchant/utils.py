@@ -5,9 +5,7 @@ import time
 
 
 def driver_setup():
-    driver = webdriver.Chrome(
-        "/home/jaxe/Documents/repositorios/portmarket/scrapy-mercante/chromedriver_linux64/chromedriver"
-    )
+    driver = webdriver.Firefox()
     driver.set_page_load_timeout(6)  # When to try again and reload.
     return driver
 
