@@ -18,6 +18,8 @@ reach_main_page(driver)
 
 go_to_search_main_page(driver)
 
+cookies = driver.get_cookies()
+
 select_consult_option(driver)
 
 driver.switch_to.default_content()
