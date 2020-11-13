@@ -16,11 +16,18 @@ def get_data():
     )
 
     soup = BeautifulSoup(response.text)
-
     tables = soup.find_all("table")
-    agency = tables[1].find_all("tr")[1].find_all("td")[1].text
 
-    print(agency)
+    def get_form_data(table, tr, td=1):
+        return tables[table].find_all("tr")[tr].find_all("td")[td].text
+
+    agency = get_form_data(1, 1)
+    port = get_form_data(1, 2)
+    vessel = get_form_data(1, 3)
+    shipowner_trip_number = get_form_data(1, 4)
+    operation_type = get_form_data(1, 5)
+
+    print(operation_type)
 
 
 get_data()
