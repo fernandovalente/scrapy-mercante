@@ -25,11 +25,33 @@ class MerchantScraper:
         def get_form_data(table, tr, td=1):
             return tables[table].find_all("tr")[tr].find_all("td")[td].text.strip()
 
-        def quick_get_first_table(obj, fields):
+        def get_summary(obj, fields):
             for i, f in enumerate(fields):
                 obj[f] = get_form_data(1, i)
 
-        quick_get_first_table(
+        def get_partners(obj):
+            obj["partners"] = []
+            for tr in tables[2].find_all("tr")[1:]:
+                tds = tr.find_all("td")
+                obj["partners"].append((tds[0].text.strip(), tds[1].text.strip()))
+
+        def get_procedent_ports(obj):
+            obj["proceeding_ports"] = []
+            for tr in tables[3].find_all("tr")[1:]:
+                tds = tr.find_all("td")
+                obj["proceeding_ports"].append(
+                    (tds[0].text.strip(), tds[1].text.strip())
+                )
+
+        def get_subsequent_ports(obj):
+            obj["subsequent_ports"] = []
+            for tr in tables[4].find_all("tr")[1:]:
+                tds = tr.find_all("td")
+                obj["subsequent_ports"].append(
+                    (tds[0].text.strip(), tds[1].text.strip())
+                )
+
+        get_summary(
             json,
             [
                 "agency",
@@ -44,11 +66,15 @@ class MerchantScraper:
             ],
         )
 
+        get_partners(json)
+        get_procedent_ports(json)
+        get_subsequent_ports(json)
+
         return json
 
 
-scraper = MerchantScraper(
-    "JSESSIONID=0000OB05qFFSdBttob-DhO2DZDb:CA0395646190A33600000A8C0000003E00000008"
-)
-data = scraper.get_data_from_portcall_id("20000350812")
-print(data)
+if __name__ == "__main__":
+    scraper = MerchantScraper(
+        "JSESSIONID=0000OB05qFFSdBttob-DhO2DZDb:CA0395646190A33600000A8C0000003E00000008"
+    )
+    data = scraper.get_data_from_portcall_id("20000350812")
