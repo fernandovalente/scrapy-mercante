@@ -3,31 +3,52 @@ import requests as req
 from bs4 import BeautifulSoup
 
 
-def get_data():
-    json = {}
-    link = "http://www.mercante.transportes.gov.br/g36127/servlet/serpro.siscomex.mercante.servlet.cadastro.EscalaSvlet"
-    response = req.post(
-        link,
-        {"pagina": "ConsultaEscala", "NumEscala": "20000350812"},
-        headers={
-            "Cookie": "JSESSIONID=0000OB05qFFSdBttob-DhO2DZDb:CA0395646190A33600000A8C0000003E00000008",
-            "Content-Type": "application/x-www-form-urlencoded",
-        },
-    )
+class MerchantScraper:
+    def __init__(self, cookie):
+        self.cookie = cookie
 
-    soup = BeautifulSoup(response.text)
-    tables = soup.find_all("table")
+    def get_data_from_portcall_id(self, portcall_id):
+        json = {}
+        link = "http://www.mercante.transportes.gov.br/g36127/servlet/serpro.siscomex.mercante.servlet.cadastro.EscalaSvlet"
+        response = req.post(
+            link,
+            {"pagina": "ConsultaEscala", "NumEscala": portcall_id},
+            headers={
+                "Cookie": self.cookie,
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+        )
 
-    def get_form_data(table, tr, td=1):
-        return tables[table].find_all("tr")[tr].find_all("td")[td].text
+        soup = BeautifulSoup(response.text)
+        tables = soup.find_all("table")
 
-    agency = get_form_data(1, 1)
-    port = get_form_data(1, 2)
-    vessel = get_form_data(1, 3)
-    shipowner_trip_number = get_form_data(1, 4)
-    operation_type = get_form_data(1, 5)
+        def get_form_data(table, tr, td=1):
+            return tables[table].find_all("tr")[tr].find_all("td")[td].text.strip()
 
-    print(operation_type)
+        def quick_get_first_table(obj, fields):
+            for i, f in enumerate(fields):
+                obj[f] = get_form_data(1, i)
+
+        quick_get_first_table(
+            json,
+            [
+                "agency",
+                "port",
+                "vessel",
+                "shipowner_trip_number",
+                "operation_type",
+                "flag",
+                "responsible",
+                "navigation_company",
+                "transporter_nationality",
+            ],
+        )
+
+        return json
 
 
-get_data()
+scraper = MerchantScraper(
+    "JSESSIONID=0000OB05qFFSdBttob-DhO2DZDb:CA0395646190A33600000A8C0000003E00000008"
+)
+data = scraper.get_data_from_portcall_id("20000350812")
+print(data)
