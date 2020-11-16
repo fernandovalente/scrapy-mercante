@@ -8,7 +8,7 @@ app = FastAPI()
 
 
 @app.get("/merchant/{portcall_id}")
-def read_root(portcall_id: str, response: Response):
+def get_merchant(portcall_id: str, response: Response):
     scraper = MerchantScraper()
 
     try:
