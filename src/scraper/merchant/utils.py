@@ -5,13 +5,7 @@ import time
 
 
 def driver_setup():
-    profile = webdriver.FirefoxProfile()
-    profile.set_preference("http.response.timeout", 2)
-
-    options = webdriver.FirefoxOptions()
-    options.headless = True
-
-    driver = webdriver.Firefox(options=options, firefox_profile=profile)
+    driver = webdriver.Firefox()
     driver.set_page_load_timeout(6)  # When to try again and reload.
     return driver
 
@@ -46,17 +40,3 @@ def do_portcall_search(driver, portcall_value):
 def end_driver(driver):
     time.sleep(6)
     driver.close()
-
-
-def get_cookie():
-    driver = driver_setup()
-    try:
-        driver.get("http://www.mercante.transportes.gov.br/g36127/")
-    except Exception:
-        pass
-
-    cookie = driver.get_cookies()
-
-    driver.close()
-
-    return cookie
