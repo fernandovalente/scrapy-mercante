@@ -4,6 +4,7 @@ ipdb
 selenium
 beautifulsoup4
 webdrivermanager
+requests
 
 # API
 fastapi
