@@ -1,0 +1,1 @@
+from scraper.merchant.main import MerchantScraper

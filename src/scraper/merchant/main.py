@@ -1,11 +1,29 @@
 import requests as req
-
+import time
 from bs4 import BeautifulSoup
 
 
 class MerchantScraper:
-    def __init__(self, cookie):
-        self.cookie = cookie
+    def __init__(self):
+        self.get_cookie()
+
+    def get_cookie(self):
+        session = req.Session()
+        r = session.post(
+            "http://www.mercante.transportes.gov.br/g36127/servlet/serpro.siscomex.mercante.servlet.MercanteController",
+            {
+                "Tipo MIME": "application/x-www-form-urlencoded",
+                "cpf": "pmercpr",
+                "senha": "publica",
+                "sistema": "MERCANTE",
+                "acao": "logon",
+                "passo": "1",
+            },
+        )
+
+        cookies = session.cookies.get_dict()
+
+        self.cookie = f"JSESSIONID={cookies['JSESSIONID']}"
 
     def get_data_from_portcall_id(self, portcall_id):
         json = {}
@@ -51,24 +69,27 @@ class MerchantScraper:
                     (tds[0].text.strip(), tds[1].text.strip())
                 )
 
-        get_summary(
-            json,
-            [
-                "agency",
-                "port",
-                "vessel",
-                "shipowner_trip_number",
-                "operation_type",
-                "flag",
-                "responsible",
-                "navigation_company",
-                "transporter_nationality",
-            ],
-        )
+        try:
+            get_summary(
+                json,
+                [
+                    "agency",
+                    "port",
+                    "vessel",
+                    "shipowner_trip_number",
+                    "operation_type",
+                    "flag",
+                    "responsible",
+                    "navigation_company",
+                    "transporter_nationality",
+                ],
+            )
 
-        get_partners(json)
-        get_procedent_ports(json)
-        get_subsequent_ports(json)
+            get_partners(json)
+            get_procedent_ports(json)
+            get_subsequent_ports(json)
+        except:
+            raise Exception(response.text)
 
         return json
 
