@@ -114,13 +114,13 @@ class MerchantScraper:
         soup = BeautifulSoup(response.text)
         table = soup.find_all("table")[2]
         list_json = []
-        for tr in table.find_all("tr"):
+        for tr in table.find_all("tr")[1:]:
             tds = tr.find_all("td")
             json = {
-                "id": tds[0].text,
-                "eta": tds[1].text,
-                "agency": tds[2].text,
-                "vessel": tds[3].text,
+                "id": tds[0].text.strip(),
+                "eta": tds[1].text.strip(),
+                "agency": tds[2].text.strip(),
+                "vessel": tds[3].text.strip(),
             }
             list_json.append(json)
 
