@@ -6,7 +6,7 @@ from scraper.merchant import MerchantScraper
 app = FastAPI()
 
 
-@app.get("/merchant/{portcall_id}")
+@app.get("/merchant/portcall/{portcall_id}")
 def get_merchant(portcall_id: str, response: Response):
     scraper = MerchantScraper()
 
