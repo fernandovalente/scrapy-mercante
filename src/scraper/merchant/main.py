@@ -92,12 +92,3 @@ class MerchantScraper:
             raise Exception(response.text)
 
         return json
-
-
-if __name__ == "__main__":
-    # Example for using Scraper
-    scraper = MerchantScraper(
-        "JSESSIONID=0000OB05qFFSdBttob-DhO2DZDb:CA0395646190A33600000A8C0000003E00000008"
-    )
-    data = scraper.get_data_from_portcall_id("20000350812")
-    print(data)

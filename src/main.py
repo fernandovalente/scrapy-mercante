@@ -2,7 +2,6 @@ from typing import Optional
 
 from fastapi import FastAPI, Response
 from scraper.merchant import MerchantScraper
-from scraper.merchant.utils import get_cookie
 
 app = FastAPI()
 
