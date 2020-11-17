@@ -26,3 +26,14 @@ def get_portcalls(start_date: str, end_date: str, port: str, response: Response)
     except Exception as e:
         response.status_code = 400
         return e
+
+
+@app.get("/merchant/vessel/{imo}")
+def get_vessel(imo: str, response: Response):
+    scraper = MerchantScraper()
+
+    try:
+        return scraper.get_data_from_vessel_imo(imo)
+    except Exception as e:
+        response.status_code = 400
+        return e

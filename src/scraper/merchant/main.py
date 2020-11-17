@@ -126,3 +126,49 @@ class MerchantScraper:
             list_json.append(json)
 
         return list_json
+
+    def get_data_from_vessel_imo(self, imo):
+        json = {}
+        link = "http://www.mercante.transportes.gov.br/g36127/servlet/tabelas.embarc.EmbarcSvlet"
+        response = req.post(
+            link,
+            {"pagina": "EmbarcConPub", "coEmbarc": imo, "noEmbarc": ""},
+            headers={
+                "Cookie": self.cookie,
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+        )
+
+        soup = BeautifulSoup(response.text)
+        table = soup.find_all("table")[0]
+        trs = table.find_all("tr")
+
+        json = {
+            "imo": trs[0].find_all("td")[1].text.strip(),
+            "description": trs[1].find_all("td")[1].text.strip(),
+            "irin": trs[2].find_all("td")[1].text.strip(),
+            "nacionality": trs[3].find_all("td")[1].text.strip(),
+            "shipowner": trs[4].find_all("td")[1].text.strip(),
+            "traffic_type": trs[5].find_all("td")[1].text.strip(),
+            "vessel_type": trs[6].find_all("td")[1].text.strip(),
+            "shipyard": trs[7].find_all("td")[1].text.strip(),
+            "build_year": trs[8].find_all("td")[1].text.strip(),
+            "vessel_operating": trs[9].find_all("td")[1].text.strip(),
+            "carry_containers": trs[10].find_all("td")[1].text.strip(),
+            "REB": trs[11].find_all("td")[1].text.strip(),
+            "BHP_power": trs[12].find_all("td")[1].text.strip(),
+            "container_cap_20_feet": trs[13].find_all("td")[1].text.strip(),
+            "gross_tonnage": trs[14].find_all("td")[1].text.strip(),
+            "vessel_length": trs[15].find_all("td")[1].text.strip(),
+            "vessel_draft": trs[16].find_all("td")[1].text.strip(),
+            "hull_number": trs[8].find_all("td")[3].text.strip(),
+            "transports_bulk": trs[9].find_all("td")[3].text.strip(),
+            "foreign_company_sell": trs[10].find_all("td")[3].text.strip(),
+            "deadweight_tonnage": trs[11].find_all("td")[3].text.strip(),
+            "cargo_cap": trs[12].find_all("td")[3].text.strip(),
+            "net_tonnage": trs[13].find_all("td")[3].text.strip(),
+            "knot_speed": trs[14].find_all("td")[3].text.strip(),
+            "beam": trs[15].find_all("td")[3].text.strip(),
+            "static_traction_tonnage": trs[16].find_all("td")[3].text.strip(),
+        }
+        return json
