@@ -1,1 +1,1 @@
-from scraper.merchant.main import MerchantScraper
+from .main import MerchantScraper
