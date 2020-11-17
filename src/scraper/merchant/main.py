@@ -73,6 +73,7 @@ class MerchantScraper:
             get_summary(
                 json,
                 [
+                    "_id",
                     "agency",
                     "port",
                     "vessel",
