@@ -92,3 +92,36 @@ class MerchantScraper:
             raise Exception(response.text)
 
         return json
+
+    def list_portcalls_by_date(self, start_date, end_date, port):
+        json = {}
+        link = "http://www.mercante.transportes.gov.br/g36127/servlet/serpro.siscomex.mercante.servlet.cadastro.EscalaSvlet"
+        response = req.post(
+            link,
+            {
+                "pagina": "ConsultaEscala",
+                "NumEscala": "",
+                "DtInicial": start_date,
+                "DtFinal": end_date,
+                "IMO": "",
+                "Porto": port,
+            },
+            headers={
+                "Cookie": self.cookie,
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+        )
+        soup = BeautifulSoup(response.text)
+        table = soup.find_all("table")[2]
+        list_json = []
+        for tr in table.find_all("tr")[1:]:
+            tds = tr.find_all("td")
+            json = {
+                "id": tds[0].text.strip(),
+                "eta": tds[1].text.strip(),
+                "agency": tds[2].text.strip(),
+                "vessel": tds[3].text.strip(),
+            }
+            list_json.append(json)
+
+        return list_json
