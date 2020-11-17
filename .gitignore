@@ -1,0 +1,16 @@
+.env
+.env/*
+*.env/
+.idea/
+.vscode/
+.DS_Store
+
+venv/
+
+.git/
+.Python
+**/__pycache__/*
+*.pyc
+
+geckodriver.log
+local.env
