@@ -40,6 +40,17 @@ def get_vessel(imo: str, response: Response):
         return e
 
 
+@app.get("/portosrio/{date}")
+def get_portosrio(date: str, response: Response):
+    scraper = PortosRio()
+
+    try:
+        return scraper.get_data_from_date(date)
+    except Exception as e:
+        response.status_code = 400
+        return e
+
+
 @app.get("/practical/rj/")
 def get_practical_rj(response: Response):
     scraper = PracticalScraper()
