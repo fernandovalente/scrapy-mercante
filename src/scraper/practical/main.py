@@ -30,10 +30,11 @@ class PracticalScraper:
                     "vessel": tds[1].find_all("a")[0].text,
                     "draft": tds[2].text,
                     "LOA": tds[3].text,
-                    "GT": tds[4].text,
-                    "beam": tds[5].text,
+                    "beam": tds[4].text,
+                    "GT": tds[5].text,
                     "DWT": tds[6].text,  # probably deadweight_tonnage
-                    "from": tds[7].text,
+                    "maneuver": tds[7].text,  # probably deadweight_tonnage
+                    "from": tds[8].text,
                     "to": tds[8].text,
                     "BRD": tds[9].text,
                 }
@@ -54,10 +55,11 @@ class PracticalScraper:
                     "vessel": tds[1].find_all("a")[0].text,
                     "draft": tds[2].text,
                     "LOA": tds[3].text,
-                    "GT": tds[4].text,
-                    "beam": tds[5].text,
+                    "beam": tds[4].text,
+                    "GT": tds[5].text,
                     "DWT": tds[6].text,  # probably deadweight_tonnage
-                    "from": tds[7].text,
+                    "maneuver": tds[7].text,  # probably deadweight_tonnage
+                    "from": tds[8].text,
                     "to": tds[8].text,
                     "BRD": tds[9].text,
                 }
@@ -79,12 +81,13 @@ class PracticalScraper:
                     "vessel": tds[1].find_all("a")[0].text,
                     "draft": tds[2].text,
                     "LOA": tds[3].text,
-                    "GT": tds[4].text,
-                    "beam": tds[5].text,
+                    "beam": tds[4].text,
+                    "GT": tds[5].text,
                     "DWT": tds[6].text,  # probably deadweight_tonnage
-                    "from": tds[7].text,
-                    "to": tds[8].text,
-                    "BRD": tds[9].text,
+                    "maneuver": tds[7].text,  # probably deadweight_tonnage
+                    "from": tds[8].text,
+                    "to": tds[9].text,
+                    "BRD": tds[10].text,
                 }
                 port.append(json_practical)
             return port
