@@ -2,4 +2,4 @@ build:
 	docker-compose build
 
 local:
-	docker-compose up
+	uvicorn src.main:app --reload

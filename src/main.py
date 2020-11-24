@@ -1,7 +1,9 @@
 from typing import Optional
 
 from fastapi import FastAPI, Response
-from .scraper.merchant import MerchantScraper
+from .scraper.merchant.main import MerchantScraper
+from .scraper.practical.main import PracticalScraper
+from .scraper.portosrio.main import PortosRio
 
 app = FastAPI()
 
@@ -34,6 +36,29 @@ def get_vessel(imo: str, response: Response):
 
     try:
         return scraper.get_data_from_vessel_imo(imo)
+    except Exception as e:
+        response.status_code = 400
+        return e
+
+
+@app.get("/portosrio/{date}")
+def get_portosrio(date: str, response: Response):
+    scraper = PortosRio()
+
+    try:
+        return scraper.get_data_from_date(date)
+    except Exception as e:
+        print(e)
+        response.status_code = 400
+        return e
+
+
+@app.get("/practical/rj/")
+def get_practical_rj(response: Response):
+    scraper = PracticalScraper()
+
+    try:
+        return scraper.get_data_from_practical_rj()
     except Exception as e:
         response.status_code = 400
         return e
