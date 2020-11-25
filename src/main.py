@@ -3,7 +3,7 @@ from typing import Optional
 from fastapi import FastAPI, Response
 from .scraper.merchant.main import MerchantScraper
 from .scraper.practical.main import PracticalScraper
-from scraper.vessel.main import VesselScraper
+from .scraper.vessel.main import VesselScraper
 from .scraper.portosrio.main import PortosRio
 
 app = FastAPI()
