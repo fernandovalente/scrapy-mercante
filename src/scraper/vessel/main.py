@@ -24,7 +24,6 @@ class VesselScraper:
                     break
                 for odd in odds:
                     divs = odd.find_all("div")
-                    # col_date = odd.find_all("col-sm-1") in case of using last seen, copy these data on the even block
                     json_row = {
                         "name": divs[3].find_all("a")[0].text,
                         "description": divs[3].find_all("span")[0].text,
@@ -33,9 +32,6 @@ class VesselScraper:
                         "mmsi": divs[6].text,
                         "len_x_wid_meters": divs[7].text,
                     }
-                    #     "area": divs[8].text,
-                    #     "last_seen": col_date[0].text,
-                    # }
                     json.append(json_row)
 
                 for even in evens:
