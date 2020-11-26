@@ -45,6 +45,7 @@ def get_vessel(imo: str, response: Response):
 @app.get("/portosrio/{date}")
 def get_portosrio(date: str, response: Response):
     scraper = PortosRio()
+    response.headers["Content-Type"] = "application/json; charset=utf-8"
 
     try:
         return scraper.get_data_from_date(date)
