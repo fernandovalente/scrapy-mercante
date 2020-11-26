@@ -55,6 +55,19 @@ def get_portosrio(date: str, response: Response):
         return e
 
 
+@app.get("/practical/rj/history/{date}")
+def get_pratical_rj_history(date: str, response: Response):
+    scraper = PracticalScraper()
+    response.headers["Content-Type"] = "application/json; charset=utf-8"
+
+    try:
+        return scraper.get_data_from_pratical_rj_history(date)
+    except Exception as e:
+        print(e)
+        response.status_code = 400
+        return e
+
+
 @app.get("/practical/rj/")
 def get_practical_rj(response: Response):
     scraper = PracticalScraper()
