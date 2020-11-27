@@ -9,7 +9,7 @@ class VesselScraper:
 
     def get_vessel_data(self):
         json = []
-        for c in ["string.ascii_uppercase"]:
+        for c in string.ascii_uppercase:
             i = 1
             print(c)
             while i < 400:
