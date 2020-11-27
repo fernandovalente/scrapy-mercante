@@ -13,7 +13,7 @@ class VesselScraper:
         for c in ["B"]:
             i = 1
             print(c)
-            while i < 6:
+            while i < 2:
                 link = f"https://www.vesseltracker.com/en/vessels.html?page={str(i)}&search={c}"  # Gets summarized data from the pagination
                 response = req.get(link)
                 soup = BeautifulSoup(response.text, features="lxml")
@@ -93,4 +93,5 @@ class VesselScraper:
 
         with open("boats.json", "w") as outfile:
             j.dump(json, outfile)
+            outfile.close()
         return json
