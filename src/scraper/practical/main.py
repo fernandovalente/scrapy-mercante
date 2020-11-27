@@ -6,6 +6,33 @@ class PracticalScraper:
     def __init__(self):
         print("hi")
 
+    def get_data_from_pratical_rj_history(self, date):
+        date = date.replace("-", "%2F")
+        link = f"http://praticagem-rj.com.br/?act=MAN&cmd=&cpx=10&dti={date}&dtf={date}&btSel="
+        response = req.get(link)
+
+        soup = BeautifulSoup(response.text, features="lxml")
+
+        table = soup.find_all("table")[0].find_all("table")[12].find_all("table")[5]
+
+        json = []
+
+        for tr in table.find_all("tr")[1:]:
+            tds = tr.find_all("td")
+
+            json.append(
+                {
+                    "vessel": tds[1].text,
+                    "start": tds[2].text,
+                    "end": tds[3].text,
+                    "maneuver": tds[4].text,
+                    "from": tds[5].text,
+                    "to": tds[6].text,
+                }
+            )
+
+        return json
+
     def get_data_from_practical_rj(self):
         json_practical = {}
         ports = {}
