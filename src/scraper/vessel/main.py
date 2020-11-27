@@ -9,10 +9,10 @@ class VesselScraper:
 
     def get_vessel_data(self):
         json = []
-        for c in string.ascii_uppercase:
+        for c in ["A"]:
             i = 1
             print(c)
-            while i < 400:
+            while i < 2:
                 print(str(i))
                 link = f"https://www.vesseltracker.com/en/vessels.html?page={str(i)}&search={c}"
                 response = req.get(link)
