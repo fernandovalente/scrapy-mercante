@@ -88,3 +88,14 @@ def get_vessels_from_vt(response: Response):
     except Exception as e:
         response.status_code = 400
         return e
+
+
+@app.get("/vesseltracker/ports/")
+def get_vessels_from_vt(response: Response):
+    scraper = VesselScraper()
+
+    try:
+        return scraper.get_ports_from_vesseltracker()
+    except Exception as e:
+        response.status_code = 400
+        return e
