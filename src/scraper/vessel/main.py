@@ -10,11 +10,11 @@ class VesselScraper:  # Related to vessel tracker
 
     def get_vessel_data(self):
         json = []
-        for c in string.ascii_uppercase:
-            i = 1
-            print(c)
-            while i < 400:
-                link = f"https://www.vesseltracker.com/en/vessels.html?page={str(i)}&search={c}"  # Gets summarized data from the pagination
+        for letter in string.ascii_uppercase:
+            page = 1
+            print(letter)
+            while page < 400:
+                link = f"https://www.vesseltracker.com/en/vessels.html?page={str(page)}&search={letter}"  # Gets summarized data from the pagination
                 response = req.get(link)
                 soup = BeautifulSoup(response.text, features="lxml")
                 odds = soup.find_all(class_="row odd")  # Type of line in table
@@ -22,7 +22,7 @@ class VesselScraper:  # Related to vessel tracker
                 json_row = {}
                 if len(odds) == 0 and len(evens) == 0:  # Next iteration if empty page
                     break
-                print(str(i))
+                print(str(page))
 
                 for odd in odds:
                     divs = odd.find_all("div")
@@ -89,7 +89,7 @@ class VesselScraper:  # Related to vessel tracker
                         "len_x_wid_meters": divs[7].text,
                     }
                     json.append(json_row)
-                i = i + 1
+                page = page + 1
 
         with open("boats.json", "w") as outfile:
             j.dump(json, outfile)
@@ -98,7 +98,7 @@ class VesselScraper:  # Related to vessel tracker
 
     def get_ports_from_vesseltracker(self):
         json = []
-        i = 1
+        page = 1
 
         def get_data_from_rows(
             rows,
@@ -120,8 +120,8 @@ class VesselScraper:  # Related to vessel tracker
                 }
                 json.append(json_row)
 
-        while i < 300:
-            link = f"https://www.vesseltracker.com/en/ports.html?page={str(i)}"  # Gets summarized data from the pagination
+        while page < 2:
+            link = f"https://www.vesseltracker.com/en/ports.html?page={str(page)}"  # Gets summarized data from the pagination
             response = req.get(link)
             soup = BeautifulSoup(response.text, features="lxml")
             odds = soup.find_all(class_="row odd")  # Type of line in table
@@ -129,11 +129,11 @@ class VesselScraper:  # Related to vessel tracker
             json_row = {}
             if len(odds) == 0 and len(evens) == 0:  # Next iteration if empty page
                 break
-            print(f"Page: {str(i)}")
+            print(f"Page: {str(page)}")
             get_data_from_rows(odds)
             get_data_from_rows(evens)
 
-            i = i + 1
+            page = page + 1
 
         with open("ports.json", "w") as outfile:
             j.dump(json, outfile)
