@@ -120,7 +120,7 @@ class VesselScraper:  # Related to vessel tracker
                 }
                 json.append(json_row)
 
-        while page < 2:
+        while page < 400:
             link = f"https://www.vesseltracker.com/en/ports.html?page={str(page)}"  # Gets summarized data from the pagination
             response = req.get(link)
             soup = BeautifulSoup(response.text, features="lxml")
