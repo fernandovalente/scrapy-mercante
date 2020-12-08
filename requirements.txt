@@ -6,6 +6,9 @@ beautifulsoup4
 webdrivermanager
 requests
 
+# For AWS Lambda
+mangum==0.10.0
+
 # API
 fastapi
 uvicorn

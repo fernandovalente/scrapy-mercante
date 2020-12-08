@@ -1,6 +1,8 @@
 from typing import Optional
 
 from fastapi import FastAPI, Response
+from mangum import Mangum
+
 from .scraper.merchant.main import MerchantScraper
 from .scraper.practical.main import PracticalScraper
 from .scraper.vessel.main import VesselScraper
@@ -99,3 +101,6 @@ def get_vessels_from_vt(response: Response):
     except Exception as e:
         response.status_code = 400
         return e
+
+
+handler = Mangum(app)
