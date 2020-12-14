@@ -41,7 +41,10 @@ class MerchantScraper:
         tables = soup.find_all("table")
 
         def get_form_data(table, tr, td=1):
-            return tables[table].find_all("tr")[tr].find_all("td")[td].text.strip()
+            try:
+                return tables[table].find_all("tr")[tr].find_all("td")[td].text.strip()
+            except:
+                return ""
 
         def get_summary(obj, fields):
             for i, f in enumerate(fields):
@@ -85,6 +88,8 @@ class MerchantScraper:
                     "transporter_nationality",
                 ],
             )
+
+            json["etb"] = get_form_data(1, 10) + " " + get_form_data(1, 10, 3)
 
             get_partners(json)
             get_procedent_ports(json)
