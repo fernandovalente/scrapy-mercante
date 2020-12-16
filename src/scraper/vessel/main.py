@@ -139,3 +139,35 @@ class VesselScraper:  # Related to vessel tracker
             j.dump(json, outfile)
             outfile.close()
         return json
+
+    def get_vessels_from_vesselfinder(self):
+        json = []  # possible data from vesseltracker
+
+        with open("boats.json", "r") as outfile:
+            json = j.load(outfile)
+            outfile.close()
+
+        updated_vessel = {}
+        updated_json = []
+        for vessel in json:
+            json_row = {
+                "name": vessel["name"],
+                "description": vessel["description"],
+                "imo": vessel["imo"],
+                "AIS_type": vessel["AIS_type"],
+                "flag": vessel["flag"],  # Possibly translated as nacionality
+                "callsign": vessel["callsign"],
+                "mmsi": vessel["mmsi"],
+                "len_x_wid_meters": vessel["len_x_wid_meters"],
+            }
+            print(vessel["name"])
+        vessel_name = json[0]["name"]
+        vessel_imo = json[0]["imo"]
+        vessel_mmsi = json[0]["mmsi"]
+        link = f"https://www.vesselfinder.com/vessels/{vessel_name}-IMO-{vessel_imo}-MMSI-{vessel_mmsi}"  # Gets summarized data from the pagination
+        print(link)
+        response = req.get(link)
+        soup = BeautifulSoup(response.text, features="lxml")
+        print(soup)
+
+        return {"ok"}
