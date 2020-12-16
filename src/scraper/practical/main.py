@@ -62,8 +62,8 @@ class PracticalScraper:
                     "DWT": tds[6].text,  # probably deadweight_tonnage
                     "maneuver": tds[7].text,  # probably deadweight_tonnage
                     "from": tds[8].text,
-                    "to": tds[8].text,
-                    "BRD": tds[9].text,
+                    "to": tds[9].text,
+                    "BRD": tds[10].text,
                 }
                 port.append(json_practical)
             return port
