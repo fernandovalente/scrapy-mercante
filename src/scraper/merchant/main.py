@@ -89,7 +89,10 @@ class MerchantScraper:
                 ],
             )
 
-            json["etb"] = get_form_data(1, 10) + " " + get_form_data(1, 10, 3)
+            json["etb"] = (get_form_data(1, 10) + " " + get_form_data(1, 10, 3)).strip()
+            json["atb"] = (get_form_data(1, 11) + " " + get_form_data(1, 11, 3)).strip()
+            json["ets"] = (get_form_data(1, 12) + " " + get_form_data(1, 12, 3)).strip()
+            json["ats"] = (get_form_data(1, 13) + " " + get_form_data(1, 13, 3)).strip()
 
             get_partners(json)
             get_procedent_ports(json)
