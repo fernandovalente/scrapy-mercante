@@ -164,9 +164,10 @@ class VesselScraper:  # Related to vessel tracker
         vessel_name = json[0]["name"]
         vessel_imo = json[0]["imo"]
         vessel_mmsi = json[0]["mmsi"]
+        headers = {"User-Agent": "Mozilla/5.0"}
         link = f"https://www.vesselfinder.com/vessels/{vessel_name}-IMO-{vessel_imo}-MMSI-{vessel_mmsi}"  # Gets summarized data from the pagination
         print(link)
-        response = req.get(link)
+        response = req.get(link, headers=headers)
         soup = BeautifulSoup(response.text, features="lxml")
         print(soup)
 
