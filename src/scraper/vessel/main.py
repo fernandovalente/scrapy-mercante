@@ -91,7 +91,7 @@ class VesselScraper:  # Related to vessel tracker
                     json.append(json_row)
                 page = page + 1
 
-        with open("boats.json", "w") as outfile:
+        with open("boats_vesseltracker.json", "w") as outfile:
             j.dump(json, outfile)
             outfile.close()
         return json
