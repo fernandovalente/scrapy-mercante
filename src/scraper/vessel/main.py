@@ -149,7 +149,22 @@ class VesselScraper:  # Related to vessel tracker
             json = j.load(outfile)
             outfile.close()
 
-        updated_vessel = {}
+        updated_vessel = {
+            "name": "",
+            "description": "",
+            "imo": "",
+            "AIS_type": "",
+            "flag": "",  # Possibly translated as nacionality
+            "callsign": "",
+            "mmsi": "",
+            "len_x_wid_meters": "",
+            "len": "",
+            "beam": "",
+            "ship_type": "",
+            "gross_tonnage": "",
+            "summer_dwt": "",
+            "year_built": "",
+        }
         updated_json = []
 
         for vessel in json:
@@ -187,7 +202,7 @@ class VesselScraper:  # Related to vessel tracker
                 vessel_len = trs_particulars[7].text
                 beam = trs_particulars[8].text
                 year_built = trs_particulars[10].text
-                vessel_json = {
+                vessel_from_finder = {
                     "len": vessel_len,
                     "beam": beam,
                     "ship_type": ship_type,
@@ -195,12 +210,87 @@ class VesselScraper:  # Related to vessel tracker
                     "summer_dwt": summer_dwt,
                     "year_built": year_built,
                 }
-                updated_json.append(vessel_json)
+                updated_vessel = {
+                    "name": vessel["name"],
+                    "description": vessel["description"],
+                    "imo": vessel["imo"],
+                    "AIS_type": vessel["AIS_type"],
+                    "flag": vessel["flag"],  # Possibly translated as nacionality
+                    "callsign": vessel["callsign"],
+                    "mmsi": vessel["mmsi"],
+                    "len_x_wid_meters": f"{vessel_len} x {beam}",
+                    "ship_type": ship_type,
+                    "gross_tonnage": gross_tonnage,
+                    "summer_dwt": summer_dwt,
+                    "year_built": year_built,
+                }
+                updated_json.append(updated_vessel)
             except Exception as e:
+                print(e)
+                print(updated_json)
                 updated_json.append(
                     {"status": "error", "vessel_name": vessel_name, "imo": vessel_imo}
                 )
-
                 continue
 
+        with open("boats.json", "w") as outfile:
+            j.dump(updated_json, outfile)
+            outfile.close()
+        return json
+
         return updated_json
+
+    # def merge_vesselfinder_with_boatsjson(
+    #     self,
+    # ):  # this functions is based on the boats file. Merging the data
+    #     json_vesseltracker_boats = []  # possible data from vesseltracker
+    #     json_vesselfinder_boats = []  # possible data from vesseltracker
+
+    #     with open("boats_vesseltracker.json", "r") as outfile:
+    #         json_vesseltracker_boats = j.load(outfile)
+    #         outfile.close()
+
+    #     with open("boats_vesselfinder.json", "r") as outfile:
+    #         json_vesselfinder_boats = j.load(outfile)
+    #         outfile.close()
+
+    #     updated_vessel = {
+    #         "name": "",
+    #         "description": "",
+    #         "imo": "",
+    #         "AIS_type": "",
+    #         "flag": "",  # Possibly translated as nacionality
+    #         "callsign": "",
+    #         "mmsi": "",
+    #         "len_x_wid_meters": "",
+    #         "len": "",
+    #         "beam": "",
+    #         "ship_type": "",
+    #         "gross_tonnage": "",
+    #         "summer_dwt": "",
+    #         "year_built": "",
+    #     }
+    #     updated_json = []
+
+    #     for vessel in json_vesseltracker_boats:
+    #         try:
+    #             updated_vessel["name"] =
+    #             updated_vessel["description"] =
+    #             updated_vessel["name"] =
+    #             updated_vessel["name"] =
+    #             updated_vessel["name"] =
+    #             updated_vessel["name"] =
+    #             updated_vessel["name"] =
+    #             updated_vessel["name"] =
+    #             updated_vessel["name"] =
+    #             updated_vessel["name"] =
+    #             updated_vessel["name"] =
+    #             updated_json.append(vessel_json)
+    #         except Exception as e:
+    #             updated_json.append(
+    #                 {"status": "error", "vessel_name": vessel_name, "imo": vessel_imo}
+    #             )
+
+    #             continue
+
+    #     return updated_json
