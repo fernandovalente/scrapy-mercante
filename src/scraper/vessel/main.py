@@ -140,7 +140,9 @@ class VesselScraper:  # Related to vessel tracker
             outfile.close()
         return json
 
-    def get_vessels_from_vesselfinder(self):
+    def get_vessels_from_vesselfinder(
+        self,
+    ):  # this functions is based on the boats file. Merging the data
         json = []  # possible data from vesseltracker
 
         with open("boats.json", "r") as outfile:
@@ -149,26 +151,56 @@ class VesselScraper:  # Related to vessel tracker
 
         updated_vessel = {}
         updated_json = []
-        for vessel in json:
-            json_row = {
-                "name": vessel["name"],
-                "description": vessel["description"],
-                "imo": vessel["imo"],
-                "AIS_type": vessel["AIS_type"],
-                "flag": vessel["flag"],  # Possibly translated as nacionality
-                "callsign": vessel["callsign"],
-                "mmsi": vessel["mmsi"],
-                "len_x_wid_meters": vessel["len_x_wid_meters"],
-            }
-            print(vessel["name"])
-        vessel_name = json[0]["name"]
-        vessel_imo = json[0]["imo"]
-        vessel_mmsi = json[0]["mmsi"]
-        headers = {"User-Agent": "Mozilla/5.0"}
-        link = f"https://www.vesselfinder.com/vessels/{vessel_name}-IMO-{vessel_imo}-MMSI-{vessel_mmsi}"  # Gets summarized data from the pagination
-        print(link)
-        response = req.get(link, headers=headers)
-        soup = BeautifulSoup(response.text, features="lxml")
-        print(soup)
 
-        return {"ok"}
+        for vessel in json:
+            try:
+                # json_row = {
+                #     "name": vessel["name"],
+                #     "description": vessel["description"],
+                #     "imo": vessel["imo"],
+                #     "AIS_type": vessel["AIS_type"],
+                #     "flag": vessel["flag"],  # Possibly translated as nacionality
+                #     "callsign": vessel["callsign"],
+                #     "mmsi": vessel["mmsi"],
+                #     "len_x_wid_meters": vessel["len_x_wid_meters"],
+                # }
+                print(vessel["name"])
+
+                vessel_name = vessel["name"]
+                vessel_imo = vessel["imo"]
+                vessel_mmsi = vessel["mmsi"]
+                headers = {"User-Agent": "Mozilla/5.0"}
+                link = f"https://www.vesselfinder.com/vessels/{vessel_name}-IMO-{vessel_imo}-MMSI-0"  # Gets summarized data from the pagination
+                print(link)
+                response = req.get(link, headers=headers)
+                soup = BeautifulSoup(response.text, features="lxml")
+
+                vessel_section = soup.find_all(
+                    class_="tparams"
+                )  # Type of line in table
+                trs_particulars = vessel_section[3].find_all(
+                    class_="v3"
+                )  # v3 is the value column
+                ship_type = trs_particulars[2].text
+                gross_tonnage = trs_particulars[5].text
+                summer_dwt = trs_particulars[6].text
+                vessel_len = trs_particulars[7].text
+                beam = trs_particulars[8].text
+                year_built = trs_particulars[10].text
+                vessel_json = {
+                    "len": vessel_len,
+                    "beam": beam,
+                    "ship_type": ship_type,
+                    "gross_tonnage": gross_tonnage,
+                    "summer_dwt": summer_dwt,
+                    "year_built": year_built,
+                }
+                updated_json.append(vessel_json)
+            except Exception as e:
+                updated_json.append(
+                    {"status": "error", "vessel_name": vessel_name, "imo": vessel_imo}
+                )
+
+                continue
+
+        return updated_json
