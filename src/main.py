@@ -103,4 +103,15 @@ def get_vessels_from_vt(response: Response):
         return e
 
 
+@app.get("/vesselfinder/vessels/")
+def get_vessels_from_vf(response: Response):
+    scraper = VesselScraper()
+
+    try:
+        return scraper.get_vessels_from_vesselfinder()
+    except Exception as e:
+        response.status_code = 400
+        return e
+
+
 handler = Mangum(app)
