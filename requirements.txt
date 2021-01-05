@@ -5,6 +5,7 @@ selenium
 beautifulsoup4
 webdrivermanager
 requests
+requests-html==0.10.0
 
 # For AWS Lambda
 mangum==0.10.0

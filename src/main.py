@@ -71,11 +71,11 @@ def get_pratical_rj_history(date: str, response: Response):
 
 
 @app.get("/practical/rj/")
-def get_practical_rj(response: Response):
+async def get_practical_rj(response: Response):
     scraper = PracticalScraper()
 
     try:
-        return scraper.get_data_from_practical_rj()
+        return await scraper.get_data_from_practical_rj()
     except Exception as e:
         response.status_code = 400
         return e

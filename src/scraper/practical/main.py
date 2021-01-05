@@ -1,5 +1,8 @@
 import requests as req
+from requests_html import AsyncHTMLSession
 from bs4 import BeautifulSoup
+
+import re
 
 
 class PracticalScraper:
@@ -33,7 +36,7 @@ class PracticalScraper:
 
         return json
 
-    def get_data_from_practical_rj(self):
+    async def get_data_from_practical_rj(self):
         json_practical = {}
         ports = {}
         port_guanabara = []
@@ -41,7 +44,20 @@ class PracticalScraper:
         link = "http://www.praticagem-rj.com.br/"
         response = req.get(link)
 
+        session = AsyncHTMLSession()
+        r = await session.get(link)
+        await r.html.arender()
+        js_soup = BeautifulSoup(r.html.html)
+
         soup = BeautifulSoup(response.text)
+
+        def get_imo(a):
+            text = a["onmouseover"]
+
+            result = re.findall(r"myHint.show\((.*)\)", str(text))
+            modal = js_soup.find("div", {"id": f"TTip{result[0]}"})
+
+            return modal.find_all("tr")[4].find_all("td")[0].text
 
         def get_guanabara_port_data(soup):
             port = []
@@ -58,6 +74,7 @@ class PracticalScraper:
                     "draft": tds[2].text,
                     "LOA": tds[3].text,
                     "beam": tds[4].text,
+                    "imo": get_imo(tds[1].find_all("a")[0]),
                     "GT": tds[5].text,
                     "DWT": tds[6].text,  # probably deadweight_tonnage
                     "maneuver": tds[7].text,  # probably deadweight_tonnage
