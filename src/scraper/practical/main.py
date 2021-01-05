@@ -57,8 +57,6 @@ class PracticalScraper:
             result = re.findall(r"myHint.show\((.*)\)", str(text))
             modal = js_soup.find("div", {"id": f"TTip{result[0]}"})
 
-            print(modal.find_all("tr")[4].find_all("td")[0])
-
             return modal.find_all("tr")[4].find_all("td")[0].text
 
         def get_guanabara_port_data(soup):
