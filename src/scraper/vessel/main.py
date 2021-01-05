@@ -248,4 +248,4 @@ class VesselScraper:  # Related to vessel tracker
             j.dump(updated_json, outfile)
             outfile.close()
 
-        return updated_json
+        return json_boats + updated_json
