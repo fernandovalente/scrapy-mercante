@@ -142,13 +142,23 @@ class VesselScraper:  # Related to vessel tracker
 
     def get_vessels_from_vesselfinder(
         self,
-    ):  # this functions is based on the boats file. Merging the data
-        json = []  # possible data from vesseltracker
+    ):  # this functions is based on the boats_vesseltracker file. Mergin with the vesselfinder
+        # Also this writes the data on boat completely, even with checkpoints. Meaning that it will always override.
+        json_boats = []
+        json_vesseltracker = []  # possible data from vesseltracker
 
         with open("boats.json", "r") as outfile:
-            json = j.load(outfile)
+            try:
+                json_boats = j.load(outfile)
+            except:
+                json_boats = []
             outfile.close()
 
+        with open("boats_vesseltracker.json", "r") as outfile:
+            json_vesseltracker = j.load(outfile)
+            outfile.close()
+
+        i = 0
         updated_vessel = {
             "name": "",
             "description": "",
@@ -166,19 +176,13 @@ class VesselScraper:  # Related to vessel tracker
             "year_built": "",
         }
         updated_json = []
-
-        for vessel in json:
+        i = 0
+        vessel_unit = 6001
+        for vessel in json_vesseltracker:
+            i = i + 1
+            if i < vessel_unit:
+                continue
             try:
-                # json_row = {
-                #     "name": vessel["name"],
-                #     "description": vessel["description"],
-                #     "imo": vessel["imo"],
-                #     "AIS_type": vessel["AIS_type"],
-                #     "flag": vessel["flag"],  # Possibly translated as nacionality
-                #     "callsign": vessel["callsign"],
-                #     "mmsi": vessel["mmsi"],
-                #     "len_x_wid_meters": vessel["len_x_wid_meters"],
-                # }
                 print(vessel["name"])
 
                 vessel_name = vessel["name"]
@@ -186,7 +190,6 @@ class VesselScraper:  # Related to vessel tracker
                 vessel_mmsi = vessel["mmsi"]
                 headers = {"User-Agent": "Mozilla/5.0"}
                 link = f"https://www.vesselfinder.com/vessels/{vessel_name}-IMO-{vessel_imo}-MMSI-0"  # Gets summarized data from the pagination
-                print(link)
                 response = req.get(link, headers=headers)
                 soup = BeautifulSoup(response.text, features="lxml")
 
@@ -226,16 +229,23 @@ class VesselScraper:  # Related to vessel tracker
                 }
                 updated_json.append(updated_vessel)
             except Exception as e:
-                print(e)
-                print(updated_json)
                 updated_json.append(
                     {"status": "error", "vessel_name": vessel_name, "imo": vessel_imo}
                 )
                 continue
+            finally:
+                checkpoint = i % 1000
+                json_boats_complete = []
+                json_boats_complete = json_boats + updated_json  # what is on file
+                # what was previously on file + what was scrapped
+                if checkpoint == 0:
+                    print(i)
+                    with open("boats.json", "w") as outfile:
+                        j.dump(json_boats_complete, outfile)
+                        outfile.close()
 
         with open("boats.json", "w") as outfile:
             j.dump(updated_json, outfile)
             outfile.close()
-        return json
 
         return updated_json
