@@ -93,7 +93,6 @@ class VesselScraper:  # Related to vessel tracker
 
         with open("boats_vesseltracker.json", "w") as outfile:
             j.dump(json, outfile)
-            outfile.close()
         return json
 
     def get_ports_from_vesseltracker(self):
@@ -137,7 +136,6 @@ class VesselScraper:  # Related to vessel tracker
 
         with open("ports.json", "w") as outfile:
             j.dump(json, outfile)
-            outfile.close()
         return json
 
     def get_vessels_from_vesselfinder(
@@ -152,11 +150,9 @@ class VesselScraper:  # Related to vessel tracker
                 json_boats = j.load(outfile)
             except:
                 json_boats = []
-            outfile.close()
 
         with open("boats_vesseltracker.json", "r") as outfile:
             json_vesseltracker = j.load(outfile)
-            outfile.close()
 
         i = 0
         updated_vessel = {
@@ -242,10 +238,8 @@ class VesselScraper:  # Related to vessel tracker
                     print(i)
                     with open("boats.json", "w") as outfile:
                         j.dump(json_boats_complete, outfile)
-                        outfile.close()
 
         with open("boats.json", "w") as outfile:
             j.dump(updated_json, outfile)
-            outfile.close()
 
         return json_boats + updated_json
