@@ -177,7 +177,7 @@ class VesselScraper:  # Related to vessel tracker
         }
         updated_json = []
         i = 0
-        vessel_unit = 6001
+        vessel_unit = 0
         for vessel in json_vesseltracker:
             i = i + 1
             if i < vessel_unit:
