@@ -180,3 +180,38 @@ class MerchantScraper:
             "static_traction_tonnage": trs[16].find_all("td")[3].text.strip(),
         }
         return json
+
+    def get_merchant_ports_of_country(self, country_code):
+        json = {}
+        data = []
+        link = "https://www.mercante.transportes.gov.br/g36127/servlet/tabelas.porto.PortoSvlet"
+
+        response = req.post(
+            link,
+            {
+                "pagina": "PortoConsul2",
+                "coPorto": "",
+                "noPorto": "",
+                "coPais": country_code,
+                "coSerarr": "",
+            },
+            headers={
+                "Cookie": self.cookie,
+                "Content-Type": "application/x-www-form-urlencoded",
+                "User-Agent": "Mozilla/5.0",
+            },
+            verify=False,
+        )
+
+        soup = BeautifulSoup(response.text)
+        print(soup)
+        tds = soup.find_all(class_="td2")
+        tds_iterator = iter(tds)
+        for code, name in zip(
+            tds_iterator, tds_iterator
+        ):  # zips each 2 elements of new_list in a tuple
+            code = code.text.strip()
+            name = name.text.strip()
+            data.append({"code": code, "name": name})
+
+        return data

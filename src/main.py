@@ -44,6 +44,18 @@ def get_vessel(imo: str, response: Response):
         return e
 
 
+@app.get("/merchant/ports_of_country/{country_code}")
+def get_merchant_ports_by_country(country_code: str, response: Response):
+    scraper = MerchantScraper()
+
+    try:
+        return scraper.get_merchant_ports_of_country(country_code)
+    except Exception as e:
+        response.status_code = 400
+        print(e)
+        return e
+
+
 @app.get("/portosrio/{date}")
 def get_portosrio(date: str, response: Response):
     scraper = PortosRio()
