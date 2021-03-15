@@ -182,36 +182,71 @@ class MerchantScraper:
         return json
 
     def get_merchant_ports_of_country(self, country_code):
+        ###
+        # TODO: This code is incomplete. It doesn't look through the pages from 2 to n-1.
+        ###
         json = {}
         data = []
         link = "https://www.mercante.transportes.gov.br/g36127/servlet/tabelas.porto.PortoSvlet"
+        for br_port in br_ports_data:
+            response = req.post(
+                link,
+                {
+                    "pagina": "PortoConsul2",
+                    "coPais": country_code,
+                },
+                headers={
+                    "Cookie": self.cookie,
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "User-Agent": "Mozilla/5.0",
+                },
+                verify=False,
+            )
 
-        response = req.post(
-            link,
-            {
-                "pagina": "PortoConsul2",
-                "coPorto": "",
-                "noPorto": "",
-                "coPais": country_code,
-                "coSerarr": "",
-            },
-            headers={
-                "Cookie": self.cookie,
-                "Content-Type": "application/x-www-form-urlencoded",
-                "User-Agent": "Mozilla/5.0",
-            },
-            verify=False,
-        )
+            soup = BeautifulSoup(response.text)
+            tds = soup.find_all(class_="td2")
+            tds_iterator = iter(tds)
+            for code, name in zip(
+                tds_iterator, tds_iterator
+            ):  # zips each 2 elements of new_list in a tuple
+                code = code.text.strip()
+                name = name.text.strip()
+                data.append({"code": code, "name": name})
 
-        soup = BeautifulSoup(response.text)
-        print(soup)
-        tds = soup.find_all(class_="td2")
-        tds_iterator = iter(tds)
-        for code, name in zip(
-            tds_iterator, tds_iterator
-        ):  # zips each 2 elements of new_list in a tuple
-            code = code.text.strip()
-            name = name.text.strip()
-            data.append({"code": code, "name": name})
+        return data
+
+    def get_merchant_ports_name_by_code(self):
+        link = "https://ports.s3.amazonaws.com/only_br_ports.json"  # port data to search by their codes
+        response = req.get(link)
+        br_ports_data = response.json()["database_portdata"]
+        json = {}
+        data = []
+        link = "https://www.mercante.transportes.gov.br/g36127/servlet/tabelas.porto.PortoSvlet"
+        for br_port in br_ports_data:
+            try:
+                response = req.post(
+                    link,
+                    {
+                        "pagina": "PortoConsul2",
+                        "coPorto": br_port["code"],
+                    },
+                    headers={
+                        "Cookie": self.cookie,
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "User-Agent": "Mozilla/5.0",
+                    },
+                    verify=False,
+                )
+
+                soup = BeautifulSoup(response.text, features="lxml")
+                tds = soup.find_all(class_="td2")
+                code = tds[0].text.strip()
+                print(code)
+                name = tds[1].text.strip()
+                print(name)
+                data.append({"code": code, "name": name})
+
+            except:
+                continue
 
         return data
