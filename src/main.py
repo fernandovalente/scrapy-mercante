@@ -57,7 +57,7 @@ def get_merchant_ports_by_country(country_code: str, response: Response):
 
 
 @app.get("/merchant/ports_name_by_code_list/")
-def get_merchant_ports_by_country(response: Response):
+def get_merchant_ports_by_code(response: Response):
     scraper = MerchantScraper()
 
     try:
