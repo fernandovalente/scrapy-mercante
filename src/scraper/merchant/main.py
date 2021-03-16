@@ -272,9 +272,10 @@ class MerchantScraper:
         link = "https://ports.s3.amazonaws.com/only_br_ports.json"  # port data to search by their codes
         response = req.get(link)
         br_ports_data = response.json()["database_portdata"]
+        print("hi")
         json = {}
         data = []
-        link = "https://www.mercante.transportes.gov.br/g36127/servlet/tabelas.porto.PortoSvlet"
+        link = "http://www.mercante.transportes.gov.br/g36127/servlet/tabelas.porto.PortoSvlet"
         for br_port in br_ports_data:
             try:
                 response = req.post(
@@ -288,7 +289,6 @@ class MerchantScraper:
                         "Content-Type": "application/x-www-form-urlencoded",
                         "User-Agent": "Mozilla/5.0",
                     },
-                    verify=False,
                 )
 
                 soup = BeautifulSoup(response.text, features="lxml")
@@ -299,7 +299,8 @@ class MerchantScraper:
                 print(name)
                 data.append({"code": code, "name": name})
 
-            except:
+            except Exception as e:
+                print(e)
                 continue
 
         return data
