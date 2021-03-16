@@ -1,6 +1,8 @@
 import requests as req
 import time
 from bs4 import BeautifulSoup
+from datetime import date
+import json as j
 
 
 class MerchantScraper:
@@ -132,6 +134,57 @@ class MerchantScraper:
                 "vessel": tds[3].text.strip(),
             }
             list_json.append(json)
+
+        today = date.today()
+        filename = f"portcalls_{today}.json"
+        print(filename)
+
+        return list_json
+
+    def list_portcalls_by_date_on_file_from_port_list(self, start_date, end_date):
+        link = "https://ports.s3.amazonaws.com/only_br_ports.json"  # port data to search by their codes
+        response = req.get(link)
+        br_ports_data = response.json()["database_portdata"]
+        list_json = []
+        for br_port in br_ports_data:
+            try:
+                json = {}
+                link = "http://www.mercante.transportes.gov.br/g36127/servlet/serpro.siscomex.mercante.servlet.cadastro.EscalaSvlet"
+                response = req.post(
+                    link,
+                    {
+                        "pagina": "ConsultaEscala",
+                        "NumEscala": "",
+                        "DtInicial": start_date,
+                        "DtFinal": end_date,
+                        "IMO": "",
+                        "Porto": br_port["code"],
+                    },
+                    headers={
+                        "Cookie": self.cookie,
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                )
+                soup = BeautifulSoup(response.text)
+                table = soup.find_all("table")[2]
+                for tr in table.find_all("tr")[1:]:
+                    tds = tr.find_all("td")
+                    json = {
+                        "id": tds[0].text.strip(),
+                        "eta": tds[1].text.strip(),
+                        "agency": tds[2].text.strip(),
+                        "vessel": tds[3].text.strip(),
+                    }
+                    list_json.append(json)
+
+                today = date.today()
+                filename = f"portcalls_{today}.json"
+                print(filename)
+
+                with open(filename, "w") as outfile:
+                    j.dump(list_json, outfile, indent=4, sort_keys=True)
+            except:
+                continue
 
         return list_json
 
