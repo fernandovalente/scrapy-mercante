@@ -135,10 +135,6 @@ class MerchantScraper:
             }
             list_json.append(json)
 
-        today = date.today()
-        filename = f"portcalls_{today}.json"
-        print(filename)
-
         return list_json
 
     def list_portcalls_by_date_on_file_from_port_list(self, start_date, end_date):
@@ -302,4 +298,6 @@ class MerchantScraper:
                 print(e)
                 continue
 
+            with open("ports_code_name.json", "w") as outfile:
+                j.dump(data, outfile, indent=4, sort_keys=True)
         return data
