@@ -272,8 +272,7 @@ class MerchantScraper:
         link = "https://ports.s3.amazonaws.com/only_br_ports.json"  # port data to search by their codes
         response = req.get(link)
         br_ports_data = response.json()["database_portdata"]
-        json = {}
-        data = []
+        json, data = {}, []
         link = "http://www.mercante.transportes.gov.br/g36127/servlet/tabelas.porto.PortoSvlet"
         for br_port in br_ports_data:
             try:
@@ -292,11 +291,13 @@ class MerchantScraper:
 
                 soup = BeautifulSoup(response.text, features="lxml")
                 tds = soup.find_all(class_="td2")
-                code = tds[0].text.strip()
-                print(code)
-                name = tds[1].text.strip()
-                print(name)
-                data.append({"code": code, "name": name})
+                
+                if len(tds) > 1:
+                    code = tds[0].text.strip()
+                    print(code)
+                    name = tds[1].text.strip()
+                    print(name)
+                    data.append({"code": code, "name": name})
 
             except Exception as e:
                 print(e)
