@@ -272,7 +272,6 @@ class MerchantScraper:
         link = "https://ports.s3.amazonaws.com/only_br_ports.json"  # port data to search by their codes
         response = req.get(link)
         br_ports_data = response.json()["database_portdata"]
-        print("hi")
         json = {}
         data = []
         link = "http://www.mercante.transportes.gov.br/g36127/servlet/tabelas.porto.PortoSvlet"
